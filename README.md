@@ -1,5 +1,8 @@
 # Dialogflow-googleAssistant_Reprompt
-If the user doesnt say anything, you can reprompt
+If the user doesnt say anything, you can reprompt.
+Reprompting is used only for Google Assistant and does not work on the Dialogflow console.
+
+
 
 'use strict';
 
