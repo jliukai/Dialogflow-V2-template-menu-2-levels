@@ -23,36 +23,61 @@ function processV1Request (request, response) {
   let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
   const googleAssistantRequest = 'google'; // Constant to identify Google Assistant requests
   const app = new DialogflowApp({request: request, response: response});
-  // Create handlers for Dialogflow actions as well as a 'default' handler
   
+  console.log('Headers: ', JSON.stringify(request.headers, null, 2));
+  console.log('Body: ', JSON.stringify(request.body, null, 2));
   
-    function welcome (app) {
-        let reprompt;
-        let isFinal;        
-        let responses = [
-            'Welcome intent 1st message. how are you?',
-            'What was that?',
-            'Sorry I didn\'t catch that. Could you repeat yourself?',
-            `Okay let's try this again later.`
-        ];
-
-        try{
-            reprompt = Number(app.getArgument('REPROMPT_COUNT').intValue) + 1;
-            isFinal = app.getArgument('IS_FINAL_REPROMPT').boolValue;
-        } catch (err){
-            reprompt = 0;
-            isFinal = false;
+  let my_context = 'my_context';
+  let repeat = 'repeat';
+  
+  function welcome() { 
+        try {  //after 1st time running, say this    
+            let is_FirstTime = app.getContextArgument(my_context,'isFirstTime');
+            
+            if (is_FirstTime.value === true) {  //1st repeat
+                app.ask('Hi Again. How are you?', [
+                    `I did not hear any response. How are you? no input message 1`,
+                    `no input reprompt message 2`,
+                    `no input reprompt message 3`
+                ]);
+            }
+        } catch (err) { //1st time running
+            let param = { isFirstTime: true};
+            app.setContext(my_context,100, param);
+            
+            app.ask('Welcome. how are you?', [
+                `I did not hear any response. How are you? no input message 1`,
+                `no input reprompt message 2`,
+                `no input reprompt message 3`
+            ]);
         }
-        if ((isFinal === true) || (reprompt > 2)) {
-            app.tell(responses[reprompt]);
-        }else{
-            app.ask(responses[reprompt]);
-        }
-        
     }
+
+    function welcomeFallback() {
+        try {   //for "mismatched input" 
+            let welcomeRepeat = app.getContextArgument(repeat,'welcomeRepeat');
+            console.log('welcomeRepeat', welcomeRepeat);   
+            
+            if(welcomeRepeat == null){
+                let param = { welcomeRepeat: 1 }
+                app.setContext(repeat, 1, param);
+                app.ask('I dont understand 1. can you say it again?');
+            }else if (welcomeRepeat.value === 1) {  //1st repeat
+                let param = { welcomeRepeat: 2 }
+                app.setContext(repeat, 1, param);
+                app.ask('I dont understand 2. can you say it again?');
+            } else {   //2nd, last repeat, set lifespan 0 to clear.
+                app.setContext(repeat, 0);
+                app.ask('I dont understand 3. Goodbye.');
+            }
+        }catch(err){
+            console.log('err: ', err);
+        }
+    }
+    
     const actionMap = new Map();
     actionMap.set('input.welcome', welcome);
-    //actionMap.set(app.StandardIntents.NO_INPUT, noInput);
+    actionMap.set('welcome.fallback', welcomeFallback);
     app.handleRequest(actionMap);
 
- }
+}
