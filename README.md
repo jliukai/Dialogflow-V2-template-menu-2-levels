@@ -1,25 +1,35 @@
-# Dialogflow-googleAssistant_Reprompt
-If the user doesnt say anything, you can reprompt. 
-If the user triggers a fallback intent, you can say varying inputs.
+# Dialogflow, template menu, 2 levels
+A great method to organize your Dialogflow Agent when the user can go into 2+ of menus at anytime. This is an example of a 2 level menu.
 
-Reprompting is used only for Google Assistant and does not work on the Dialogflow console.
+for example, you want to create a chatbot for your insurance company.
+the navigation menu looks like this:
 
-How to Use:
-1. Create an Agent with Dialogflow.com
-2. Go to the fulfillment page, you can use this code in the inline editor.
-3. For the welcome intent > Actions, set to "input.welcome". 
-   Set fulfillment "use webhook".
-4. Create a welcome fallback intent. For the Welcome fallback intent > Actions, set to "welcome.fallback". 
-   Set fulfillment "use webhook".
+-welcome
+-policy
+--home policy
+--travel policy
+--life policy
+-about us
+
+The 1st level is policy, and the "follow-up" level is the 2nd level. In the Dialogflow Agent, you see that I do not use followups. Instead, the "policy" intent uses slot-filling to get the policyType(home, travel, life) parameter, send it to the webhook fulfillment, and the code writes a followupEvent to run the other intents.
+The user can say "hi", "my policy", "about us", "travel policy"... at anytime. 
+
+Scenario 1:
+user says "my policy"
+response: "Sure, What type of policy are you looking for? We have Travel, Home, and Life Insurance policies."
+user says "travel"
+response "Travel Insurance Policy...."
+
+Scenario 2:
+user says "my travel policy"
+response "Travel Insurance Policy...."
+
+
+
+How to Install:
+1. Import the attached agent into www.dialogflow.com . This code only works on Dialogflow V2.
+2. Add the index.js file to the Dialogflow > fulfillment page
 
 How to Test:
-Run in the dialogflow console or AoG simulator
-1. user says "hi"
-2. user says "gibberish"
-2. user says "anything"
-2. user says "something else"
-
-Run in AoG simulator only
-1. user says "hi"
-2. press no user input button, or press enter, up to 3 times for varying messages
+TODO
 
