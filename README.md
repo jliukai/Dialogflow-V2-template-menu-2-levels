@@ -4,12 +4,12 @@ A great method to organize your [Dialogflow Agent](http://www.dialogflow.com) wh
 for example, you want to create a chatbot for your insurance company.
 the navigation menu looks like this:
 
- -welcome
- -policy
- --home policy
- --travel policy
- --life policy
- -about us
+ - welcome
+ - policy
+   - home policy
+   - travel policy
+   - life policy
+ - about us
 
 The 1st level is policy, and the "follow-up" level is the 2nd level. In the Dialogflow Agent, you see that I do not use followups. Instead, the "policy" intent uses slot-filling to get the policyType(home, travel, life) parameter, send it to the webhook fulfillment, and the code writes a followupEvent to run the other intents.
 The user can say "hi", "my policy", "about us", "travel policy"... at anytime. 
