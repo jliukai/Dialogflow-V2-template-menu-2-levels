@@ -11,8 +11,11 @@ the navigation menu looks like this:
    - life policy
  - about us
 
-The 1st level is policy, and the "follow-up" level is the 2nd level. In the Dialogflow Agent, you see that I do not use followups. Instead, the "policy" intent uses slot-filling to get the policyType(home, travel, life) parameter, send it to the webhook fulfillment, and the code writes a followupEvent to run the other intents.
-The user can say "hi", "my policy", "about us", "travel policy"... at anytime. 
+The 1st level intent is "policy", and the "follow-up" or 2nd level intent is "home policy". In the Dialogflow Agent, you see that I do not use followups. 
+
+Instead, the "policy" intent uses slot-filling to get the policyType(home, travel, life) parameter, send it to the webhook fulfillment, and the code writes a followupEvent to run the specific policyType intent.
+
+Using this structure, the user can have multiple methods of getting to the final destination of "travel policy".  
 
 
 #### How to Install:
@@ -21,11 +24,11 @@ The user can say "hi", "my policy", "about us", "travel policy"... at anytime.
 
 #### How to Test:
 Scenario 1, user goes to 1st level menu, gets directed to the 2nd level menu:
-user says "my policy"
-response: "Sure, What type of policy are you looking for? We have Travel, Home, and Life Insurance policies."
-user says "travel"
-response "Travel Insurance Policy...."
+- user says "my policy"
+- response: "Sure, What type of policy are you looking for? We have Travel, Home, and Life Insurance policies."
+- user says "travel"
+- response "Travel Insurance Policy...."
 
 Scenario 2, user goes directly to the 2nd level menu:
-user says "my travel policy"
-response "Travel Insurance Policy...."
+- user says "my travel policy"
+- response "Travel Insurance Policy...."
